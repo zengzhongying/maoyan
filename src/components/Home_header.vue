@@ -1,9 +1,9 @@
 <template>
 <div>
   <div class="container">
-    <router-link to="city" class="city">南昌</router-link>
+    <!-- <router-link to="city" class="city">南昌</router-link> -->
     <!-- <a href="#" class="city" @click="selectcity = true">南昌</a> -->
-    <div class="headText">猫眼电影</div>
+    <div class="headText">爱电影</div>
   </div>
   <div class="choose">
     <router-link to="film" class="yingpian">影片</router-link>
@@ -13,12 +13,10 @@
 </template>
 
 <script>
-import city from './city'
 import film from './film'
 import cinema from './cinema'
 export default {
   components: {
-    city,
     film,
     cinema
   },
@@ -35,7 +33,7 @@ export default {
   background-color: rgb(229,72,71);
   display: -webkit-flex;
   display: flex;
-  height: 89px;
+  height: 100px;
 }
 .city {
   display: -webkit-flex;
@@ -60,10 +58,10 @@ export default {
   display: -webkit-flex;
   display: flex;
   align-items: center;
-  font-size: 30px;
+  font-size: 40px;
   color: #fff;
   height: 88px;
-  margin-left: 250px;
+  margin:auto;
 }
 .choose {
   display: -webkit-flex;

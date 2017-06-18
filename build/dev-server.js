@@ -11,7 +11,7 @@ var express = require('express')
 var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
-
+var http = require('http');
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
@@ -21,6 +21,128 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+var apiRoutes = express.Router();
+apiRoutes.get('/film', function (req, res) {
+  let url = 'http://m.maoyan.com/movie/list.json?type=hot&offset=0&limit=1000';
+  let idList = '';
+  let getIdList = new Promise((resolve, reject) => {
+    http.get(url, response => {
+      response.on('data', data => {
+        idList += data;
+      });
+      response.on('end', () => {
+        resolve(idList);
+      });
+    })
+  });
+  getIdList.then(list => {
+      let data = JSON.parse(list)
+      res.json(data);
+    })
+ })
+apiRoutes.get('/cinema', function (req, res) {
+  let url = 'http://m.maoyan.com/cinemas.json';
+  let cinemaList = '';
+  let getcinemaList = new Promise((resolve, reject) => {
+    http.get(url, response => {
+      response.on('data', data => {
+        cinemaList += data;
+      });
+      response.on('end', () => {
+        resolve(cinemaList);
+      });
+    })
+  });
+  getcinemaList.then(list => {
+      let data = JSON.parse(list)
+      res.json(data);
+    })
+ })
+apiRoutes.get('/filmdetail/:id', function (req, res) {
+  // let movieid = +req.params.id;
+  let url = `http://m.maoyan.com/movie/${req.params.id}.json`;
+  // console.log(url);
+  let filmdetailList = '';
+  let getfilmdetailList = new Promise((resolve, reject) => {
+    http.get(url, response => {
+      response.on('data', data => {
+        filmdetailList += data;
+      });
+      response.on('end', () => {
+        resolve(filmdetailList);
+      });
+    })
+  });
+  getfilmdetailList.then(list => {
+      let data = JSON.parse(list)
+      res.json(data);
+    })
+ })
+ apiRoutes.get('/cinemadetail/:id', function (req, res) {
+   // let movieid = +req.params.id;
+   let url = `http://m.maoyan.com/showtime/wrap.json?cinemaid=${req.params.id}&movieid=`;
+   // console.log(url);
+   let cinemadetailList = '';
+   let getcinemadetailList = new Promise((resolve, reject) => {
+     http.get(url, response => {
+       response.on('data', data => {
+         cinemadetailList += data;
+       });
+       response.on('end', () => {
+         resolve(cinemadetailList);
+       });
+     })
+   });
+   getcinemadetailList.then(list => {
+       let data = JSON.parse(list)
+       res.json(data);
+     })
+  })
+apiRoutes.get('/buy/:id', function (req, res) {
+  // let movieid = +req.params.id;
+  let url = `http://m.maoyan.com/movie/${req.params.id}.json`;
+  // console.log(url);
+  let buyList = '';
+  let getbuyList = new Promise((resolve, reject) => {
+    http.get(url, response => {
+      response.on('data', data => {
+        buyList += data;
+      });
+      response.on('end', () => {
+        resolve(buyList);
+      });
+    })
+  });
+  buyList.then(list => {
+      let data = JSON.parse(list)
+      res.json(data);
+    })
+ })
+ apiRoutes.get('/cinemadetail/:id', function (req, res) {
+   // let movieid = +req.params.id;
+   let url = `http://m.maoyan.com/showtime/wrap.json?cinemaid=${req.params.id}&movieid=`;
+   // console.log(url);
+   let cinemadetailList = '';
+   let getcinemadetailList = new Promise((resolve, reject) => {
+     http.get(url, response => {
+       response.on('data', data => {
+         cinemadetailList += data;
+       });
+       response.on('end', () => {
+         resolve(cinemadetailList);
+       });
+     })
+   });
+   getcinemadetailList.then(list => {
+       let data = JSON.parse(list)
+       res.json(data);
+     })
+  })
+
+
+app.use('/api', apiRoutes);
+
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
